@@ -19,7 +19,7 @@ public class User {
 
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonBackReference // prevent back reference
     @EqualsAndHashCode.Exclude //
     private List<Review> reviews = new ArrayList<>();
