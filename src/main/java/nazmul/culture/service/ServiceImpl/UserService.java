@@ -29,6 +29,11 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> findById(Long id) {
-        return Optional.empty();
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
     }
 }

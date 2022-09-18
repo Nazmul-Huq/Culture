@@ -31,4 +31,9 @@ public class BandService implements IBandService {
     public Optional<Band> findById(Long id) {
         return bandRepository.findById(id);
     }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
 }

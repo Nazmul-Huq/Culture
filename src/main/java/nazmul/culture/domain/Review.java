@@ -5,26 +5,29 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
-@Table(name = "culture_user")
-public class User {
+@Table(name = "culture_review")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    private String name;
+    private String text;
+    private int rating;
 
-    @OneToMany(mappedBy = "user")
+    @ManyToOne
     @JsonBackReference // prevent back reference
     @EqualsAndHashCode.Exclude //
-    private List<Review> reviews = new ArrayList<>();
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
+    @ManyToOne
+    @JsonBackReference // prevent back reference
+    @EqualsAndHashCode.Exclude //
+    @JoinColumn(name = "event_id")
+    private Event event;
 
-
-}
+    }

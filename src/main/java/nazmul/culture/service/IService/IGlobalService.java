@@ -1,6 +1,9 @@
 package nazmul.culture.service.IService;
 
 
+import nazmul.culture.domain.Review;
+import org.springframework.http.ResponseEntity;
+
 import java.lang.management.OperatingSystemMXBean;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +19,7 @@ public interface IGlobalService<T, ID> {
     // find an entity by id
     Optional<T> findById(Long id);
 
-
-
+    // delete an entity by id
+    void deleteById(Long id);
 
 }

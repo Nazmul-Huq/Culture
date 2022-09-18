@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -20,6 +22,11 @@ public class Event {
     @JsonBackReference // prevent back reference
     @EqualsAndHashCode.Exclude //
     private Band band;
+
+    @OneToMany(mappedBy = "event")
+    @JsonBackReference // prevent back reference
+    @EqualsAndHashCode.Exclude //
+    private List<Review> reviews = new ArrayList<>();
 
 
 }
