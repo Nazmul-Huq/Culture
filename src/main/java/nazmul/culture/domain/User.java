@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -18,11 +20,31 @@ public class User {
     private Long id;
 
     private String name;
+    private String username;
+    private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @ManyToMany
+    @JoinTable(
+        name = "venue_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "venue_id")
+    )
+    @JsonBackReference
+    private Set<Venue> venueLiked = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false, mappedBy = "user")
     @JsonBackReference // prevent back reference
     @EqualsAndHashCode.Exclude //
     private List<Review> reviews = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "culture_user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonBackReference // prevent back reference
+    private Set<Role> roles;
 
 
 

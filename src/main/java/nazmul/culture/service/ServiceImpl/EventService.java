@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EventService implements IEventService {
@@ -36,4 +37,12 @@ public class EventService implements IEventService {
     public void deleteById(Long id) {
 
     }
-}
+
+    // get all event sort by data
+    @Override
+    public List<Event> findByOrderByTimestamp() {
+        return eventRepository.findByOrderByTimestamp();
+    }
+
+
+} // class ends here

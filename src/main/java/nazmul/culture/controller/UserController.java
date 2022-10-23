@@ -1,8 +1,10 @@
 package nazmul.culture.controller;
 
 import nazmul.culture.domain.User;
+import nazmul.culture.domain.Venue;
 import nazmul.culture.dto.UserDto;
 import nazmul.culture.service.IService.IUserService;
+import nazmul.culture.service.IService.IVenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class UserController {
 
     private IUserService userService;
+    private IVenueService venueService;
 
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService, IVenueService venueService) {
         this.userService = userService;
+        this.venueService = venueService;
     }
 
     /**
@@ -32,6 +36,20 @@ public class UserController {
         user.setName(userDto.getName());
         User newUser = userService.save(user);
         return new ResponseEntity<>("User created successfully" + newUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/create-like")
+    public ResponseEntity<String> createLike(@RequestParam Long userId,
+                                             @RequestParam Long venueId){
+        Optional<User> user = userService.findById(userId);
+        Optional<Venue> venue = venueService.findById(venueId);
+        if ( user.isPresent() && venue.isPresent()) {
+            user.get().getVenueLiked().add(venue.get());
+            userService.save(user.get());
+            return new ResponseEntity<>("like added", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("like not added", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -81,6 +99,11 @@ public class UserController {
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("User not found with Id: " + userId, HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/find-user-by-name/")
+    public ResponseEntity<?> findUserByName(@RequestParam(name = "name") String name){
+        return new ResponseEntity<>(userService.findByName(name), HttpStatus.OK);
     }
 
 
