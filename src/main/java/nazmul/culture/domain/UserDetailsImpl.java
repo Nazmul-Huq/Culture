@@ -1,7 +1,6 @@
-package nazmul.culture.security;
+package nazmul.culture.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import nazmul.culture.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,15 +32,14 @@ public class UserDetailsImpl implements UserDetails {
                 user.getName(),
                 user.getUsername(),
                 user.getPassword(),
-                user.getRoles()
-                        .stream()
-                        .map( role -> new SimpleGrantedAuthority(role.getName()))
-                        .collect(Collectors.toList()));
+                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList())
+        );
     }
 
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }

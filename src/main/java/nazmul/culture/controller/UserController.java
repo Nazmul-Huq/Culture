@@ -7,8 +7,10 @@ import nazmul.culture.service.IService.IUserService;
 import nazmul.culture.service.IService.IVenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,7 @@ public class UserController {
      * @param userDto
      * @return
      */
+    @PermitAll
     @PostMapping("/save")
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
         User user = new User();
@@ -38,6 +41,7 @@ public class UserController {
         return new ResponseEntity<>("User created successfully" + newUser, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/create-like")
     public ResponseEntity<String> createLike(@RequestParam Long userId,
                                              @RequestParam Long venueId){
@@ -56,6 +60,7 @@ public class UserController {
      * GET ALL USER
      * @return
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/get-user")
     public ResponseEntity<List<UserDto>> getUser(){
         List<UserDto> users = new ArrayList<>();
@@ -74,6 +79,7 @@ public class UserController {
      * @param userDto
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserDto userDto){
         Optional<User> userToUpdate = userService.findById(userDto.getId());
@@ -91,6 +97,7 @@ public class UserController {
      * @param userId
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> delete(@PathVariable Long userId){
         Optional<User> userToDelete = userService.findById(userId);
@@ -101,6 +108,7 @@ public class UserController {
         return new ResponseEntity<>("User not found with Id: " + userId, HttpStatus.NO_CONTENT);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/find-user-by-name/")
     public ResponseEntity<?> findUserByName(@RequestParam(name = "name") String name){
         return new ResponseEntity<>(userService.findByName(name), HttpStatus.OK);
