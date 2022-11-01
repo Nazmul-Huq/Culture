@@ -1,19 +1,23 @@
 package nazmul.culture.controller;
 
+import nazmul.culture.domain.Role;
 import nazmul.culture.domain.User;
 import nazmul.culture.domain.Venue;
+import nazmul.culture.dto.LoginResponse;
+import nazmul.culture.dto.SignupRequest;
 import nazmul.culture.dto.UserDto;
+import nazmul.culture.dto.UserSearchRequest;
+import nazmul.culture.service.IService.IRoleService;
 import nazmul.culture.service.IService.IUserService;
 import nazmul.culture.service.IService.IVenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController()
 @RequestMapping("/api/user")
@@ -21,40 +25,48 @@ public class UserController {
 
     private IUserService userService;
     private IVenueService venueService;
+    private IRoleService roleService;
 
-    public UserController(IUserService userService, IVenueService venueService) {
+    public UserController(IUserService userService, IVenueService venueService, IRoleService roleService) {
         this.userService = userService;
         this.venueService = venueService;
+        this.roleService = roleService;
     }
 
     /**
      * SAVE A USER
-     * @param userDto
      * @return
      */
     @PermitAll
     @PostMapping("/save")
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
-        User user = new User();
-        user.setName(userDto.getName());
-        User newUser = userService.save(user);
-        return new ResponseEntity<>("User created successfully" + newUser, HttpStatus.OK);
-    }
+    public ResponseEntity<LoginResponse> createUser(@RequestBody SignupRequest signupRequest){
 
-    @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/create-like")
-    public ResponseEntity<String> createLike(@RequestParam Long userId,
-                                             @RequestParam Long venueId){
-        Optional<User> user = userService.findById(userId);
-        Optional<Venue> venue = venueService.findById(venueId);
-        if ( user.isPresent() && venue.isPresent()) {
-            user.get().getVenueLiked().add(venue.get());
-            userService.save(user.get());
-            return new ResponseEntity<>("like added", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("like not added", HttpStatus.BAD_REQUEST);
+        Set<Role> rolesToAdd = new HashSet<>(); // create a set to hold all roles
+        // if requested roles are not empty, then add Role to "rolesToAdd" variable
+        if ( !(signupRequest.getRoles().isEmpty()) ) {
+            String roles = signupRequest.getRoles();
+            String[] roleIds =roles.split(",");
+            for (String roleId:roleIds) {
+                long roleIdAsLong=Long.parseLong(roleId);
+                Role role = new Role();
+                role.setId(roleIdAsLong);
+                rolesToAdd.add(role);
+            }
         }
-    }
+
+        //create the new user and set properties
+        User user = new User();
+        user.setName(signupRequest.getName());
+        user.setUsername(signupRequest.getUsername());
+        user.setPassword(signupRequest.getPassword());
+        user.setRoles(rolesToAdd);
+
+        //save the user and return message based on user is saved or not
+        User newUser = userService.save(user);
+        if (newUser != null) return ResponseEntity.ok(new LoginResponse("SUCCESS"));
+        return ResponseEntity.ok(new LoginResponse("FAILED"));
+
+    } //createUser() ends here
 
     /**
      * GET ALL USER
@@ -68,6 +80,10 @@ public class UserController {
             UserDto userdto = new UserDto();
             userdto.setId(user.getId());
             userdto.setName(user.getName());
+            userdto.setUsername(user.getUsername());
+            Set<String> roles = new HashSet<>();
+            user.getRoles().forEach( role -> roles.add(role.getName()));
+            userdto.setRoles(roles);
             users.add(userdto);
         });
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -76,19 +92,37 @@ public class UserController {
     /**
      * UPDATE AN USER
      * NOTE: only user's name can be updated. No other field is updateable
-     * @param userDto
+     * @param signupRequest
      * @return
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody UserDto userDto){
-        Optional<User> userToUpdate = userService.findById(userDto.getId());
+    public ResponseEntity<LoginResponse> update(@RequestBody SignupRequest signupRequest){
+
+        Optional<User> userToUpdate = userService.findById(signupRequest.getId());
         if (userToUpdate.isPresent()) {
-            userToUpdate.get().setName(userDto.getName());
+            Set<Role> rolesToAdd = new HashSet<>(); // create a set to hold all roles
+            if ( !(signupRequest.getRoles().isEmpty()) ) {
+                String roles = signupRequest.getRoles();
+                String[] roleIds =roles.split(",");
+                for (String roleId:roleIds) {
+                    long roleIdAsLong=Long.parseLong(roleId);
+                    Role role = new Role();
+                    role.setId(roleIdAsLong);
+                    rolesToAdd.add(role);
+                }
+            }
+
+            //create the new user and set properties
+            userToUpdate.get().setName(signupRequest.getName());
+            userToUpdate.get().setPassword(signupRequest.getPassword());
+            userToUpdate.get().setRoles(rolesToAdd);
+
             userService.save(userToUpdate.get());
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+            return ResponseEntity.ok(new LoginResponse("SUCCESS"));
+        } else {
+            return ResponseEntity.ok(new LoginResponse("FAILED"));
         }
-        return new ResponseEntity<>("User can not updated", HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -108,11 +142,69 @@ public class UserController {
         return new ResponseEntity<>("User not found with Id: " + userId, HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/find-user-by-name/")
-    public ResponseEntity<?> findUserByName(@RequestParam(name = "name") String name){
-        return new ResponseEntity<>(userService.findByName(name), HttpStatus.OK);
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @GetMapping("/find-user-by-id/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable Long id) {
+        Optional<User> user = userService.findById(id);
+        UserDto userDto = new UserDto();
+        if (user.isPresent()) {
+        userDto.setId(user.get().getId());
+        userDto.setName(user.get().getName());
+        userDto.setUsername(user.get().getUsername());
+        userDto.setPassword(user.get().getPassword());
+        Set<String> roles = new HashSet<>();
+        user.get().getRoles().forEach( role -> roles.add(role.getName()));
+        userDto.setRoles(roles);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/find-user-by-name")
+    public ResponseEntity<List<UserDto>> findUserByName(@RequestBody UserSearchRequest userSearchRequest){
+        List<UserDto> userDtoList = new ArrayList<>();
+        List<User> users = userService.findByName(userSearchRequest.getName());
+        users.forEach(user -> {
+            UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
+            userDto.setName(user.getName());
+            userDto.setUsername(user.getUsername());
+            Set<String> roles = new HashSet<>();
+            user.getRoles().forEach( role -> roles.add(role.getName()));
+            userDto.setRoles(roles);
+            userDtoList.add(userDto);
+        });
+        return new ResponseEntity(userDtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @PostMapping("/find-user-by-username")
+    public ResponseEntity<UserDto> findUserByUserName(@RequestBody UserSearchRequest userSearchRequest){
+        User user = userService.findByUsername(userSearchRequest.getName());
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setUsername(user.getUsername());
+        Set<String> roles = new HashSet<>();
+        user.getRoles().forEach( role -> roles.add(role.getName()));
+        userDto.setRoles(roles);
+        return new ResponseEntity(userDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("/create-like")
+    public ResponseEntity<String> createLike(@RequestParam Long userId,
+                                             @RequestParam Long venueId){
+        Optional<User> user = userService.findById(userId);
+        Optional<Venue> venue = venueService.findById(venueId);
+        if ( user.isPresent() && venue.isPresent()) {
+            user.get().getVenueLiked().add(venue.get());
+            userService.save(user.get());
+            return new ResponseEntity<>("like added", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("like not added", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 } // class ends here

@@ -39,7 +39,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> findByName(String name) {
-        return userRepository.findByName(name);
+        return userRepository.findByNameContaining(name);
     }
 
     @Override
