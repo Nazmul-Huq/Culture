@@ -31,9 +31,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public static PasswordEncoder passwordEncoder() {
 
         if(passwordEncoder==null){passwordEncoder = new BCryptPasswordEncoder();}
-        //passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder;
-
         //return NoOpPasswordEncoder.getInstance(); // no encoding of password
     }
 
