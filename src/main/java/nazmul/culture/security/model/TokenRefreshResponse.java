@@ -1,9 +1,8 @@
-package nazmul.culture.dto;
+package nazmul.culture.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import nazmul.culture.domain.RefreshToken;
 
 @Getter
 @Setter

@@ -1,4 +1,4 @@
-package nazmul.culture.utility;
+package nazmul.culture.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,6 +1,6 @@
-package nazmul.culture.repository;
+package nazmul.culture.security.repository;
 
-import nazmul.culture.domain.Role;
+import nazmul.culture.security.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {

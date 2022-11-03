@@ -1,7 +1,6 @@
 package nazmul.culture.dto;
 
 import lombok.Data;
-import nazmul.culture.domain.Role;
 
 import java.util.HashSet;
 import java.util.Set;

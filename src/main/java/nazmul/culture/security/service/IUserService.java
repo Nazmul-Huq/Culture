@@ -1,6 +1,6 @@
-package nazmul.culture.service.IService;
+package nazmul.culture.security.service;
 
-import nazmul.culture.domain.User;
+import nazmul.culture.security.model.User;
 import nazmul.culture.service.IService.IGlobalService;
 
 import java.util.List;

@@ -1,8 +1,8 @@
-package nazmul.culture.service.ServiceImpl;
+package nazmul.culture.security.service;
 
-import nazmul.culture.domain.Role;
-import nazmul.culture.repository.RoleRepository;
-import nazmul.culture.service.IService.IRoleService;
+import nazmul.culture.security.model.Role;
+import nazmul.culture.security.repository.RoleRepository;
+import nazmul.culture.security.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

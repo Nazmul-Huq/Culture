@@ -1,8 +1,8 @@
-package nazmul.culture.service.ServiceImpl;
+package nazmul.culture.security.service;
 
-import nazmul.culture.domain.User;
-import nazmul.culture.repository.UserRepository;
-import nazmul.culture.service.IService.IUserService;
+import nazmul.culture.security.model.User;
+import nazmul.culture.security.repository.UserRepository;
+import nazmul.culture.security.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

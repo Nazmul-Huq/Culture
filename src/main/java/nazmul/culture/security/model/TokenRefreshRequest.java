@@ -1,4 +1,4 @@
-package nazmul.culture.dto;
+package nazmul.culture.security.model;
 
 import lombok.Data;
 

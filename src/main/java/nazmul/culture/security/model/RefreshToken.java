@@ -1,8 +1,8 @@
-package nazmul.culture.domain;
+package nazmul.culture.security.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import lombok.ToString;
+import nazmul.culture.security.model.User;
 
 import javax.persistence.*;
 import java.time.Instant;

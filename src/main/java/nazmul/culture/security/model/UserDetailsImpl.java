@@ -1,4 +1,4 @@
-package nazmul.culture.domain;
+package nazmul.culture.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

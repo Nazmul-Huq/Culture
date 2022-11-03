@@ -3,8 +3,7 @@ package nazmul.culture.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
-import nazmul.culture.service.ServiceImpl.UserDetailsServiceImpl;
-import nazmul.culture.utility.JwtUtils;
+import nazmul.culture.security.service.UserDetailsServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

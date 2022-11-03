@@ -1,16 +1,17 @@
-package nazmul.culture.controller;
+package nazmul.culture.security.controller;
 
-import nazmul.culture.domain.Role;
-import nazmul.culture.domain.User;
+import nazmul.culture.security.model.SignupRequest;
+import nazmul.culture.security.model.SignupResponse;
+import nazmul.culture.security.model.Role;
+import nazmul.culture.security.model.User;
 import nazmul.culture.domain.Venue;
 import nazmul.culture.dto.*;
-import nazmul.culture.service.IService.IRoleService;
-import nazmul.culture.service.IService.IUserService;
+import nazmul.culture.security.service.IRoleService;
+import nazmul.culture.security.service.IUserService;
 import nazmul.culture.service.IService.IVenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;

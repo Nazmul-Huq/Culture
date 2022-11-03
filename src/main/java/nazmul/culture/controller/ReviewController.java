@@ -2,11 +2,11 @@ package nazmul.culture.controller;
 
 import nazmul.culture.domain.Event;
 import nazmul.culture.domain.Review;
-import nazmul.culture.domain.User;
+import nazmul.culture.security.model.User;
 import nazmul.culture.dto.ReviewDto;
 import nazmul.culture.service.IService.IEventService;
 import nazmul.culture.service.IService.IReviewService;
-import nazmul.culture.service.IService.IUserService;
+import nazmul.culture.security.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

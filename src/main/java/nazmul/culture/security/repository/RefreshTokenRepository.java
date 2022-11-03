@@ -1,7 +1,7 @@
-package nazmul.culture.repository;
+package nazmul.culture.security.repository;
 
-import nazmul.culture.domain.RefreshToken;
-import nazmul.culture.domain.User;
+import nazmul.culture.security.model.RefreshToken;
+import nazmul.culture.security.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

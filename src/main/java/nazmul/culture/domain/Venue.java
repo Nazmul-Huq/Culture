@@ -2,6 +2,7 @@ package nazmul.culture.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import nazmul.culture.security.model.User;
 
 import javax.persistence.*;
 import java.util.HashSet;

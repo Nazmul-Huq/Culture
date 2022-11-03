@@ -3,6 +3,7 @@ package nazmul.culture.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import nazmul.culture.security.model.User;
 
 import javax.persistence.*;
 

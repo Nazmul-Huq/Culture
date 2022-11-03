@@ -1,4 +1,4 @@
-package nazmul.culture.domain;
+package nazmul.culture.security.model;
 
 import lombok.Data;
 

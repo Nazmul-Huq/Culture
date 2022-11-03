@@ -1,7 +1,7 @@
-package nazmul.culture.dto;
+package nazmul.culture.security.model;
 
 import lombok.*;
-import nazmul.culture.domain.RefreshToken;
+import nazmul.culture.security.model.RefreshToken;
 
 @Getter
 @Setter

@@ -1,8 +1,10 @@
-package nazmul.culture.domain;
+package nazmul.culture.security.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import nazmul.culture.domain.Review;
+import nazmul.culture.domain.Venue;
 
 import javax.persistence.*;
 import java.util.ArrayList;
