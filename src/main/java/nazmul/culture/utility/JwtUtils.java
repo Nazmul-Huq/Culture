@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class JwtUtils {
-
-
-    public static final long TOKEN_VALIDITY = 10 * 60 * 60 * 1000; // 10 timer
+    public static final long TOKEN_VALIDITY = 1 * 60 * 1000; // 2 min
 
     //cultureServiceSecretKey
     @Value("${secret}") // aha: this is the server's private key. Which is used to generate new tokens.
@@ -31,7 +31,8 @@ public class JwtUtils {
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY ))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-    }
+    } //generateJwtToken() ends here
+
     public Boolean validateJwtToken(String token, UserDetails userDetails) {
         System.out.println("JwtUtils validateJwtToken(String token, UserDetails) With token: Call: B");
         String username = getUsernameFromToken(token);
@@ -42,6 +43,7 @@ public class JwtUtils {
         Boolean isTokenExpired = claims.getExpiration().before(new Date());
         return (username.equals(userDetails.getUsername()) && !isTokenExpired);
     }
+
     public String getUsernameFromToken(String token) {
         System.out.println("JwtUtils getUsernameFromToken(String token) With token: Call: A");
         return Jwts.parser()
@@ -59,5 +61,9 @@ public class JwtUtils {
         return claims.getSubject();
 
       */
-    }
+    } // getUsernameFromToken() ends here
+
+
+
+
 }

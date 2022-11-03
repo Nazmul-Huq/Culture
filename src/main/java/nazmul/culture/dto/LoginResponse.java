@@ -1,12 +1,12 @@
 package nazmul.culture.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import nazmul.culture.domain.RefreshToken;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class LoginResponse {
     private final String token;
+    private final RefreshToken refreshToken;
 }

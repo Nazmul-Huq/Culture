@@ -3,10 +3,7 @@ package nazmul.culture.controller;
 import nazmul.culture.domain.Role;
 import nazmul.culture.domain.User;
 import nazmul.culture.domain.Venue;
-import nazmul.culture.dto.LoginResponse;
-import nazmul.culture.dto.SignupRequest;
-import nazmul.culture.dto.UserDto;
-import nazmul.culture.dto.UserSearchRequest;
+import nazmul.culture.dto.*;
 import nazmul.culture.service.IService.IRoleService;
 import nazmul.culture.service.IService.IUserService;
 import nazmul.culture.service.IService.IVenueService;
@@ -39,7 +36,7 @@ public class UserController {
      */
     @PermitAll
     @PostMapping("/save")
-    public ResponseEntity<LoginResponse> createUser(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<SignupResponse> createUser(@RequestBody SignupRequest signupRequest){
 
         Set<Role> rolesToAdd = new HashSet<>(); // create a set to hold all roles
         // if requested roles are not empty, then add Role to "rolesToAdd" variable
@@ -63,8 +60,8 @@ public class UserController {
 
         //save the user and return message based on user is saved or not
         User newUser = userService.save(user);
-        if (newUser != null) return ResponseEntity.ok(new LoginResponse("SUCCESS"));
-        return ResponseEntity.ok(new LoginResponse("FAILED"));
+        if (newUser != null) return ResponseEntity.ok(new SignupResponse("SUCCESS"));
+        return ResponseEntity.ok(new SignupResponse("FAILED"));
 
     } //createUser() ends here
 
@@ -97,7 +94,7 @@ public class UserController {
      */
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PutMapping("/update")
-    public ResponseEntity<LoginResponse> update(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<SignupResponse> update(@RequestBody SignupRequest signupRequest){
 
         Optional<User> userToUpdate = userService.findById(signupRequest.getId());
         if (userToUpdate.isPresent()) {
@@ -119,9 +116,9 @@ public class UserController {
             userToUpdate.get().setRoles(rolesToAdd);
 
             userService.save(userToUpdate.get());
-            return ResponseEntity.ok(new LoginResponse("SUCCESS"));
+            return ResponseEntity.ok(new SignupResponse("SUCCESS"));
         } else {
-            return ResponseEntity.ok(new LoginResponse("FAILED"));
+            return ResponseEntity.ok(new SignupResponse("FAILED"));
         }
     }
 
