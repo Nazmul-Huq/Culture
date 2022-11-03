@@ -1,8 +1,10 @@
 package nazmul.culture.security.service;
 
+import nazmul.culture.security.config.SecurityConfiguration;
 import nazmul.culture.security.model.User;
 import nazmul.culture.security.repository.UserRepository;
 import nazmul.culture.security.service.IUserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,8 @@ public class UserService implements IUserService {
 
     @Override
     public User save(User user) {
+        PasswordEncoder pw = SecurityConfiguration.passwordEncoder();
+        user.setPassword(pw.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

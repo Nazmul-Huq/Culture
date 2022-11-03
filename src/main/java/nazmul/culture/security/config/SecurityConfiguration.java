@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,15 +26,15 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     private AuthenticationEntryPointImpl authenticationEntryPoint;
     private JwtFilter filter;
     private static PasswordEncoder passwordEncoder;
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
-  /*
-   if(passwordEncoder==null){
-            passwordEncoder = new BCryptPasswordEncoder();
-        }
+
+        if(passwordEncoder==null){passwordEncoder = new BCryptPasswordEncoder();}
+        //passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder;
-   */
-        return NoOpPasswordEncoder.getInstance(); // no encoding of password
+
+        //return NoOpPasswordEncoder.getInstance(); // no encoding of password
     }
 
     @Bean
