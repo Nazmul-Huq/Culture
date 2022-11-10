@@ -18,7 +18,7 @@ public class JwtUtils {
     public static final long TOKEN_VALIDITY = 1 * 60 * 1000; // 2 min
 
     //cultureServiceSecretKey
-    @Value("${secret}") // aha: this is the server's private key. Which is used to generate new tokens.
+    @Value("dfdfdfdfdfdfdfdfdfdf") // aha: this is the server's private key. Which is used to generate new tokens.
     private String jwtSecret;
 
     public String generateJwtToken(UserDetails userDetails) {
@@ -62,6 +62,16 @@ public class JwtUtils {
 
       */
     } // getUsernameFromToken() ends here
+
+/*    public boolean isTokenExpired(String token){
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        if (claims.getExpiration() == null) {
+            
+        }
+    }*/
 
 
 

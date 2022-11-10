@@ -1,13 +1,9 @@
 package nazmul.culture.security.controller;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
-import nazmul.culture.security.model.RefreshToken;
-import nazmul.culture.security.model.User;
-import nazmul.culture.security.model.UserDetailsImpl;
-import nazmul.culture.security.model.LoginRequest;
-import nazmul.culture.security.model.LoginResponse;
-import nazmul.culture.security.model.TokenRefreshRequest;
-import nazmul.culture.security.model.TokenRefreshResponse;
+import nazmul.culture.security.model.*;
 import nazmul.culture.security.exception.TokenRefreshException;
 import nazmul.culture.security.service.IRefreshTokenService;
 import nazmul.culture.security.service.IUserService;
@@ -24,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import java.util.Date;
 
 @RestController
 @AllArgsConstructor
@@ -87,6 +84,7 @@ public class AccessController {
     }
 
 
+    /*
     @GetMapping("/user/logout")
     @PermitAll
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token){
@@ -94,5 +92,18 @@ public class AccessController {
 
         return ResponseEntity.ok("SUCCESS");
     }
+     */
+
+    @PostMapping("/logout")
+    @PermitAll
+    public ResponseEntity<String> logout(@RequestBody LogoutRequest logoutRequest){
+
+
+
+        System.out.println(logoutRequest.getRefreshToken());
+        return ResponseEntity.ok("SUCCESS");
+    }
+
+
 
 }
